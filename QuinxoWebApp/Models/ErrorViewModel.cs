@@ -1,4 +1,4 @@
-namespace SPA.Models;
+namespace QuinxoWebApp.Models;
 
 public class ErrorViewModel
 {

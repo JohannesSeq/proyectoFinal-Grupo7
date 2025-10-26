@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SPA.Models;
+using QuinxoWebApp.Models;
 
-namespace SPA.Controllers;
+namespace QuinxoWebApp.Controllers;
 
 public class HomeController : Controller
 {
