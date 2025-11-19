@@ -1,0 +1,36 @@
+@model IEnumerable<QuinxoWebApp.Models.Game>
+
+@{
+    ViewData["Title"] = "Partidas Finalizadas";
+}
+
+<h1>Partidas Finalizadas</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Modo</th>
+            <th>Duración</th>
+            <th>Ganador</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var g in Model)
+        {
+            <tr>
+                <td>@g.Id</td>
+                <td>@g.CreatedAt</td>
+                <td>@(g.Mode == 1 ? "2 jugadores" : "4 jugadores")</td>
+                <td>@g.DurationSeconds s</td>
+                <td>@(g.WinnerPlayer?.Name ?? g.WinnerTeam ?? "N/A")</td>
+                <td>
+                    <a class="btn btn-info btn-sm" href="/Games/Details/@g.Id">Ver</a>
+                    <a class="btn btn-secondary btn-sm" href="/Games/ExportXml/@g.Id">XML</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

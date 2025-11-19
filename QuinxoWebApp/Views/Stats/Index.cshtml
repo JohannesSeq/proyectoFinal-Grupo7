@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Estadísticas";
+    var mode2 = (List<QuinxoWebApp.Controllers.PlayerStats>)ViewBag.Mode2;
+    var mode4 = (List<QuinxoWebApp.Controllers.TeamStats>)ViewBag.Mode4;
+}
+
+<h1>Estadísticas</h1>
+
+<h2>Modo 2 jugadores</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Jugador</th>
+            <th>Efectividad</th>
+            <th>Ganadas</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in mode2)
+        {
+            <tr>
+                <td>@p.PlayerName</td>
+                <td>@p.Effectiveness %</td>
+                <td>@p.Won</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Modo 4 jugadores</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Equipo</th>
+            <th>Efectividad</th>
+            <th>Ganadas</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in mode4)
+        {
+            <tr>
+                <td>@t.Team</td>
+                <td>@t.Effectiveness %</td>
+                <td>@t.Won</td>
+            </tr>
+        }
+    </tbody>
+</table>

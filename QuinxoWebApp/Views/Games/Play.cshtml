@@ -1,0 +1,75 @@
+@model QuinxoWebApp.Models.Game
+
+@{
+    ViewData["Title"] = "Partida";
+    var mode = Model.Mode;
+}
+
+<h1>Partida #@Model.Id</h1>
+
+<h3>Modo: @(mode == 1 ? "2 jugadores" : "4 jugadores")</h3>
+
+<div>
+    <strong>Jugadores:</strong>
+    <ul>
+        @foreach (var gp in Model.GamePlayers.OrderBy(x => x.Order))
+        {
+            <li>@gp.Order - @gp.Player!.Name (@gp.Team)</li>
+        }
+    </ul>
+</div>
+
+<hr />
+
+<!-- Reloj -->
+<div style="font-size:32px; font-weight:bold;" id="gameTimer">00:00:00</div>
+
+<hr />
+
+<!-- Tablero -->
+<div id="board" style="
+    display:grid;
+    grid-template-columns:repeat(5, 80px);
+    grid-template-rows:repeat(5, 80px);
+    gap:4px;
+">
+    @for (int r = 0; r < 5; r++)
+    {
+        for (int c = 0; c < 5; c++)
+        {
+            <div class="cube"
+                 data-row="@r"
+                 data-col="@c"
+                 style="
+                    border:1px solid #555;
+                    width:80px;
+                    height:80px;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    cursor:pointer;
+                    background:#eee;
+                 ">
+                N
+            </div>
+        }
+    }
+</div>
+
+<hr />
+
+<button class="btn btn-danger" id="resetGame">Reiniciar partida</button>
+
+<script src="/js/game.js"></script>
+
+<script>
+    window.GAME_ID = @Model.Id;
+    window.MODE = @Model.Mode;
+
+    window.PLAYERS = [
+        @foreach (var gp in Model.GamePlayers.OrderBy(x => x.Order))
+        {
+            @: { id: @gp.PlayerId, name: "@gp.Player!.Name", order: @gp.Order, team: "@gp.Team" },
+        }
+    ];
+</script>

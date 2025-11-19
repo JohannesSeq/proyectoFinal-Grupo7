@@ -1,51 +1,11 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">¡Bienvenido a Quixo en linea!</h1>
+<h1>Proyecto Quixo</h1>
+
+<div style="display:flex; flex-direction:column; gap:20px; max-width:300px;">
+    <a class="btn btn-primary" href="/Games/New">Jugar una partida nueva</a>
+    <a class="btn btn-secondary" href="/Games/Finished">Mostrar y exportar una partida finalizada</a>
+    <a class="btn btn-info" href="/Stats/Index">Mostrar estadísticas</a>
 </div>
-
-<div class ="text-center">
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#PartidaModal">Jugar una nueva partida</button>
-
-    <!-- Modal encargado de mostrar el menu de inicio de partida-->
-    <div class="modal fade" id="PartidaModal" tabindex="-1" role="dialog" aria-labelledby="PartidaModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="PartidaModalLabel">Empezar una partida</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <button type="button" class="btn btn-info">Partida de dos jugadores</button> 
-                    <br/>
-                    <br/>
-                    <button type="button" class="btn btn-info">Partida de cuatro jugadores</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#RegistroModal">Mostrar Partidas</button>
-    <button type="button" class="btn btn-secondary">Mostrar estadísticas</button>
-
-
-</div>
-
-
-<script>
-    // Función para mostrar una alerta de éxito usando SweetAlert2
-    function dispararAlertaExito(mensaje) {
-        Swal.fire({
-            icon: "success", // Icono de éxito
-            title: mensaje, // Título de la alerta
-            confirmButtonText: 'Ok' // Texto del botón de confirmación
-        }).then(() => {
-            location.reload();  // Recarga la página después de cerrar la alerta
-        });
-    }
-
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
