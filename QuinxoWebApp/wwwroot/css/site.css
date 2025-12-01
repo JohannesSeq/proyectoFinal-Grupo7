@@ -20,3 +20,53 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.cube {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    background: #e6e6e6;
+    border: 1px solid #bcbcbc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.cube-symbol {
+    position: relative;
+    z-index: 5;   /* Asegura que se vea sobre todo */
+}
+
+.orientation {
+    position: absolute;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    z-index: 10;   /* ESTO ERA LO QUE FALTABA */
+}
+
+.orientation-top {
+    top: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.orientation-right {
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.orientation-bottom {
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.orientation-left {
+    left: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+}

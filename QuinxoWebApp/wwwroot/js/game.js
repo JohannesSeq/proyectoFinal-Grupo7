@@ -25,11 +25,25 @@ function renderBoard() {
     document.querySelectorAll(".cube").forEach(c => {
         const r = parseInt(c.dataset.row);
         const col = parseInt(c.dataset.col);
-        const data = board[r][col];
 
-        c.innerHTML = data.symbol;
+        const data = board[r][col];
+        const symbol = data.symbol;
+        const point = data.point;
+
+        // Construcción visual
+        let pointHtml = "";
+
+        if (point) {
+            const pos = point.toLowerCase(); // top, right, bottom, left
+            pointHtml = `<div class="orientation orientation-${pos}">•</div>`;
+        }
+
+        const symbolHtml = `<div class="cube-symbol">${symbol !== "N" ? symbol : ""}</div>`;
+
+        c.innerHTML = pointHtml + symbolHtml;
     });
 }
+
 
 function isEdge(r, c) {
     return r === 0 || r === 4 || c === 0 || c === 4;
@@ -62,6 +76,7 @@ function playerOrderToPoint(order) {
 function nextTurn() {
     currentTurnIndex = (currentTurnIndex + 1) % PLAYERS.length;
     currentPlayer = PLAYERS[currentTurnIndex];
+    updateTurnLabel();
 }
 
 function setupClicks() {
@@ -272,5 +287,13 @@ document.addEventListener("DOMContentLoaded", () => {
     setupClicks();
 
     currentPlayer = PLAYERS[0];
+    updateTurnLabel();
     startTimer();
 });
+
+function updateTurnLabel() {
+    const player = PLAYERS[currentTurnIndex];
+    const label = document.getElementById("turnLabel");
+
+    label.textContent = `Turno actual: ${player.name} (${player.team})`;
+}
