@@ -1,0 +1,106 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\geometry{margin=1in}
+
+\title{Documentación del Proyecto Quinxo}
+\author{Grupo 7}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Integrantes del Grupo}
+\begin{itemize}
+    \item Adrián Cordero - Carné: FI21022475 - Git: Adrianca25 - Correo: acordero10422@ufide.ac.cr 
+    \item Johannes Sequeira - Carné: FI22023682 - Git: JohannesSeq - Correo: jsequeira40132@ufide.ac.cr 
+    \item Kyran Jose Vilchez Barrantes - Carné: FI17008273 - Git: Kvilchezb - Correo: kyran09.97@gmail.com
+    \item Jose Daniel Araya Arias - Carné: FI22023911 - Git: pgn3 - Correo: jd2002araya@gmail.com
+\end{itemize}
+
+\section{Frameworks y Herramientas}
+\begin{itemize}
+    \item Frameworks: ASP.NET Core MVC, Entity Framework Core, Bootstrap
+    \item Herramientas: SQLite, Visual Studio, GitHub
+\end{itemize}
+
+\section{Tipo de Aplicación y Arquitectura}
+\begin{itemize}
+    \item Tipo de aplicación: MPA (Multi-Page Application)
+    \item Arquitectura: MVC (Model-View-Controller)
+\end{itemize}
+
+\section{Diagrama de Base de Datos}
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+\node (games) [draw, rectangle] {Games | Id:int | Mode:int | CreatedAt:datetime | FinishedAt:datetime | WinnerPlayerId:int | WinnerTeam:string};
+\node (players) [draw, rectangle, below of=games] {Players | Id:int | Name:string};
+\node (gameplayers) [draw, rectangle, right of=players, xshift=6cm] {GamePlayers | Id:int | GameId:int | PlayerId:int | Order:int | Team:string};
+\node (moves) [draw, rectangle, below of=players, yshift=-2cm] {Moves | Id:int | GameId:int | PlayerId:int | FromRow:int | FromCol:int | ToRow:int | ToCol:int | Symbol:string | PointOrientation:string};
+\draw[->] (gameplayers.west) -- (players.east);
+\draw[->] (gameplayers.north) -- (games.south);
+\draw[->] (moves.north) -- (players.south);
+\draw[->] (moves.north east) -- (games.south west);
+\end{tikzpicture}
+\end{center}
+
+\section{Referencias y Prompts IA}
+\begin{itemize}
+    \item Documentación oficial: ASP.NET Core, Entity Framework, Bootstrap
+    \item Prompts IA: Conversaciones con Copilot para revisión de código, generación de README.tex y sugerencias de mejoras
+\end{itemize}
+
+\section{Instructivo}
+\subsection{Requisitos Previos}
+\begin{itemize}
+    \item Instalar .NET SDK (versión 6.0 o superior): https://dotnet.microsoft.com/download
+    \item Instalar SQLite (incluido en el proyecto, no requiere configuración adicional)
+    \item Instalar Entity Framework Core Tools:
+    \begin{verbatim}
+    dotnet tool install --global dotnet-ef --version 8.0.0
+    \end{verbatim}
+\end{itemize}
+
+\subsection{Instalación de Dependencias}
+Ejecutar en la carpeta del proyecto QuinxoWebApp:
+\begin{verbatim}
+cd QuinxoWebApp
+dotnet restore
+\end{verbatim}
+
+\subsection{Compilación}
+Compilar el proyecto:
+\begin{verbatim}
+dotnet build
+\end{verbatim}
+
+\subsection{Migraciones y Base de Datos}
+Si necesita aplicar migraciones:
+\begin{verbatim}
+dotnet ef database update
+\end{verbatim}
+
+\subsection{Ejecución}
+Ejecutar la aplicación:
+\begin{verbatim}
+dotnet run
+\end{verbatim}
+
+Luego abrir en el navegador:
+\begin{verbatim}
+http://localhost:5212
+\end{verbatim}
+
+\subsection{Notas importantes}
+\begin{itemize}
+    \item Si ejecuta desde la raíz del repositorio, use:
+    \begin{verbatim}
+    dotnet run --project QuinxoWebApp/QuinxoWebApp.csproj
+    \end{verbatim}
+    \item Para detener la aplicación, presione Ctrl + C en la consola.
+\end{itemize}
+
+\end{document}
