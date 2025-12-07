@@ -6,26 +6,23 @@
 
 <form method="post">
 
-    <div class="form-check">
+    <!--div class="form-check">
         <label><input class="form-check-input" type="radio" name="mode" value="1" checked /> Modo 2 jugadores</label> <br />
         <label><input class="form-check-input" type="radio" name="mode" value="2" /> Modo 4 jugadores</label>
-    </div>
-
-
-    <!--div class="form-group">
-        <label for="mode" class="col-sm-4 col-md-4 control-label text-right">Seleccione la cantidad de jugadores </label>
-        <div class="col-sm-7 col-md-7">
-            <div class="input-group">
-                <div id="radioBtn" class="btn-group">
-                    <a class="btn btn-primary btn-sm active" data-toggle="mode" data-title="two">Dos jugadores</a>
-                    <a class="btn btn-primary btn-sm notActive" data-toggle="mode" data-title="four">Cuatro Jugadores</a>
-                </div>
-                <input type="hidden" name="mode" id="mode">
-            </div>
-        </div>
     </div-->
 
-    <div id="playersContainer" style="margin-top:20px;">
+    <div class="funkyradio">
+        <div class="funkyradio-primary">
+            <input type="radio" name="mode" id="radio1" value="1" checked/>
+            <label for="radio1">Modo 2 jugadores</label>
+        </div>
+        <div class="funkyradio-success">
+            <input type="radio" name="mode" id="radio2" value="2"/>
+            <label for="radio2">Modo 4 jugadores</label>
+        </div>    
+    </div>
+
+    <div id="playersContainer">
         <h3>Jugadores</h3>
 
         <div id="mode2">
@@ -36,12 +33,10 @@
         </div>
 
         <div id="mode4" style="display:none;">
-            <label> Equipo #1</label>
             <input name="players" class="form-control" placeholder="Jugador A1" required />
             <br />
             <input name="players" class="form-control" placeholder="Jugador B1" required />
             <br />
-            <label> Equipo #2</label>
             <input name="players" class="form-control" placeholder="Jugador A2" required />
             <br />
             <input name="players" class="form-control" placeholder="Jugador B2" required />
