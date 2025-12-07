@@ -6,6 +6,7 @@
 
 <h1>Detalles de la Partida #@Model.Id</h1>
 
+
 <p><strong>Modo:</strong> @(Model.Mode == 1 ? "2 jugadores" : "4 jugadores")</p>
 <p><strong>Ganador:</strong> @(Model.WinnerPlayer?.Name ?? Model.WinnerTeam)</p>
 <p><strong>Duración:</strong> @Model.DurationSeconds s</p>
@@ -14,17 +15,15 @@
 
 <h3>Jugadas</h3>
 
-<input type="range" id="moveSlider" min="0" max="@moves.Count" step="1" value="0" style="width:300px;" />
+ <div class="d-flex justify-content-center">
+    <input type="range" id="moveSlider" class="form-range" min="0" max="@moves.Count" step="1" value="0" style="width:300px;" />
+ </div>
+<hr />
+<h4 id="moveLabel">Movimiento 0 de @moves.Count</h4>
 
-<p id="moveLabel">Movimiento 0 de @moves.Count</p>
 
 <!-- Tablero -->
-<div id="boardReplay" style="
-    display:grid;
-    grid-template-columns:repeat(5, 80px);
-    grid-template-rows:repeat(5, 80px);
-    gap:4px;
-">
+<div id="boardReplay">
     @for (int r = 0; r < 5; r++)
     {
         for (int c = 0; c < 5; c++)
@@ -45,6 +44,12 @@
             </div>
         }
     }
+</div>
+
+<br />
+
+<div class="d-flex justify-content-center">
+    <a class="btn btn-danger me-2" href="/Games/Finished">Volver</a>
 </div>
 
 <!-- Movimientos para JS -->

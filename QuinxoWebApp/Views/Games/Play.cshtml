@@ -9,33 +9,30 @@
 
 <h3>Modo: @(mode == 1 ? "2 jugadores" : "4 jugadores")</h3>
 
+<hr />
+
 <div>
-    <strong>Jugadores:</strong>
-    <ul>
-        @foreach (var gp in Model.GamePlayers.OrderBy(x => x.Order))
-        {
-            <li>@gp.Order - @gp.Player!.Name (@gp.Team)</li>
-        }
-    </ul>
+    <H4>Jugadores:</H4>
+    <div class="d-flex justify-content-center">
+        <ul>
+            @foreach (var gp in Model.GamePlayers.OrderBy(x => x.Order))
+            {
+                <li>@gp.Order - @gp.Player!.Name (@gp.Team)</li>
+            }
+        </ul>
+    </div>
 </div>
 
-<hr />
 
 <!-- Reloj -->
 <div style="font-size:32px; font-weight:bold;" id="gameTimer">00:00:00</div>
+<hr />
 <h3 id="turnLabel" class="mt-3 mb-3 text-primary" style="font-weight:bold;">
     Turno actual:
 </h3>
 
-<hr />
-
 <!-- Tablero -->
-<div id="board" style="
-    display:grid;
-    grid-template-columns:repeat(5, 80px);
-    grid-template-rows:repeat(5, 80px);
-    gap:4px;
-">
+<div id="board" >
     @for (int r = 0; r < 5; r++)
     {
         for (int c = 0; c < 5; c++)
@@ -43,16 +40,7 @@
             <div class="cube"
                  data-row="@r"
                  data-col="@c"
-                 style="
-                    border:1px solid #555;
-                    width:80px;
-                    height:80px;
-                    display:flex;
-                    justify-content:center;
-                    align-items:center;
-                    cursor:pointer;
-                    background:#eee;
-                 ">
+                 id="CubeLabel">
                 N
             </div>
         }
@@ -61,7 +49,10 @@
 
 <hr />
 
-<button class="btn btn-danger" id="resetGame">Reiniciar partida</button>
+<div class="d-flex justify-content-center">
+    <button class="btn btn-danger" id="resetGame">Reiniciar partida</button>
+</div>
+
 
 <script src="/js/game.js"></script>
 

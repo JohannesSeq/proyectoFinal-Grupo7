@@ -1,8 +1,4 @@
 @font-face {
-    font-family: 'SevenSegment';
-    src: url(SevenSegment.ttf);
-}
-@font-face {
     font-family: 'OpenSans';
     src: url(Fonts/Open_Sans/OpenSans-VariableFont_wdth-wght.ttf);
 }
@@ -14,7 +10,10 @@
     font-family: 'Montserrat';
     src: url(Fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
 }
-
+@font-face {
+    font-family: 'SevenSegment';
+    src: url(Fonts/SevenSegment.ttf);
+}
 
 html {
   font-size: 14px;
@@ -52,6 +51,7 @@ body {
     font-size: 26px;
     font-weight: bold;
 }
+
 
 .cube-symbol {
     position: relative;
@@ -121,6 +121,34 @@ p {
 #radioBtn .notActive{
     color: #3276b1;
     background-color: #fff;
+}
+
+#board{
+    display:grid;
+    grid-template-columns:repeat(5, 80px);
+    grid-template-rows:repeat(5, 80px);
+    gap:4px;
+    justify-content: center;
+
+}
+
+#boardReplay{
+    display:grid;
+    grid-template-columns:repeat(5, 80px);
+    grid-template-rows:repeat(5, 80px);
+    gap:4px;
+    justify-content: center;
+}
+
+#CubeLabel{
+  border:1px solid #555;
+  width:80px;
+  height:80px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  background:#eee;  
 }
 
 @import('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css') 
