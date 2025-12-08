@@ -48,9 +48,121 @@
 \end{center}
 
 \section{Referencias y Prompts IA}
+
 \begin{itemize}
-    \item Documentación oficial: ASP.NET Core, Entity Framework, Bootstrap
-    \item Prompts IA: Conversaciones con Copilot para revisión de código, generación de README.tex y sugerencias de mejoras
+
+    \item Documentación oficial: ASP.NET Core, Entity Framework y Bootstrap.
+
+    \item Prompts IA: Conversaciones con ChatGPT para revisión de código, generación de \texttt{README.tex} y sugerencias de mejoras.
+
+    \item \textbf{Error 1:} Problema al actualizar el texto de la etiqueta \texttt{turnLabel} en JavaScript.
+
+    \begin{itemize}
+
+        \item Mensaje generado:
+\begin{lstlisting}
+game.js:297 Uncaught TypeError: Cannot set properties of null (setting 'textContent')
+at updateTurnLabel (game.js:297:23)
+at HTMLDocument.<anonymous> (game.js:289:5)
+\end{lstlisting}
+
+        \item \textbf{Causa:}  
+        El JavaScript ejecutaba:
+\begin{lstlisting}
+document.getElementById("turnLabel").textContent = ...
+\end{lstlisting}
+        pero el elemento con id \texttt{turnLabel} no existía en la vista, por lo que \texttt{document.getElementById("turnLabel")} devolvía \texttt{null} y acceder a \texttt{null.textContent} provocaba el error.
+
+        \item \textbf{Solución:}  
+        Añadir el siguiente elemento en \texttt{Play.cshtml} justo antes del tablero:
+
+\begin{lstlisting}
+<h3 id="turnLabel" class="mt-3 mb-3 text-primary" style="font-weight:bold;">
+    Turno actual:
+</h3>
+\end{lstlisting}
+
+        \item Ejemplo completo:
+\begin{lstlisting}
+<div class="container">
+    <h2>Partida #@Model.Id</h2>
+
+    <h3 id="turnLabel" class="mt-3 mb-3 text-primary" style="font-weight:bold;">
+        Turno actual:
+    </h3>
+
+    <div id="gameTimer" class="timer">00:00:00</div>
+
+    <!-- TABLERO -->
+    <div id="boardContainer">
+        @* Aquí se renderiza el tablero *@
+    </div>
+
+    <button id="resetGame" class="btn btn-danger mt-3">Reiniciar</button>
+</div>
+\end{lstlisting}
+
+        \item Resultado: El label se actualiza correctamente tras agregar el elemento en la vista.
+
+    \end{itemize}
+
+    \item \textbf{Error 2:} Referencia a variable inexistente \texttt{currentPlayerIndex}.
+
+    \begin{itemize}
+
+        \item Mensaje generado:
+\begin{lstlisting}
+game.js:294 Uncaught ReferenceError: currentPlayerIndex is not defined
+\end{lstlisting}
+
+        \item \textbf{Diagnóstico:}
+        \begin{itemize}
+            \item El código original dentro de \texttt{updateTurnLabel()} estaba usando \texttt{currentPlayerIndex}.
+            \item En el resto del script no existe ninguna variable llamada \texttt{currentPlayerIndex}; en su lugar existe \texttt{currentTurnIndex} (por ejemplo: \texttt{let currentTurnIndex = 0;}).
+        \end{itemize}
+
+        \item \textbf{Código con el error (buscar en el archivo):}
+\begin{lstlisting}
+function updateTurnLabel() {
+    const player = PLAYERS[currentPlayerIndex];
+    const label = document.getElementById("turnLabel");
+
+    label.textContent = Turno actual: ${player.name} (${player.team});
+}
+\end{lstlisting}
+
+        \item \textbf{Corrección exacta:} reemplazar \texttt{currentPlayerIndex} por \texttt{currentTurnIndex}:
+
+\begin{lstlisting}
+function updateTurnLabel() {
+    const player = PLAYERS[currentTurnIndex];
+    const label = document.getElementById("turnLabel");
+
+    label.textContent = `Turno actual: ${player.name} (${player.team})`;
+}
+\end{lstlisting}
+
+        \item \textbf{Nota importante:}
+        \begin{itemize}
+            \item Verificá que la variable \texttt{currentTurnIndex} esté declarada y actualizada en el scope correcto, por ejemplo:
+\begin{lstlisting}
+let currentTurnIndex = 0;
+let currentPlayer = null;
+\end{lstlisting}
+            \item Después de la corrección, probá la partida para confirmar que el label muestra el jugador correcto en cada turno.
+        \end{itemize}
+
+    \end{itemize}
+
+
+     \item \textbf{Error 3:}  
+    \begin{itemize}
+        \item \texttt{Uncaught ReferenceError: PLAYERS is not defined}
+        \item \textbf{Solución:}  
+        Este error indica que las variables \texttt{PLAYERS}, \texttt{MODE} y \texttt{GAME_ID} no estaban definidas dentro de \texttt{game.js}.  
+        Se corrigió asegurando que estas variables fueran enviadas desde la vista mediante un bloque \texttt{<script>} que las expone antes de cargar el archivo JavaScript.
+    \end{itemize}
+
 \end{itemize}
 
 \section{Instructivo}
