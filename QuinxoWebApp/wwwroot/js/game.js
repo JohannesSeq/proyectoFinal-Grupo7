@@ -9,7 +9,6 @@ let currentPlayer = null;
 let MODE;
 let GAME_ID;
 let PLAYERS;
-
 function initBoard() {
     board = [];
     for (let r = 0; r < 5; r++) {
@@ -30,35 +29,19 @@ function renderBoard() {
         const symbol = data.symbol;
         const point = data.point;
 
-        // Construcción visual
         let pointHtml = "";
-
         if (point) {
-            const pos = point.toLowerCase(); // top, right, bottom, left
+            const pos = point.toLowerCase();
             pointHtml = `<div class="orientation orientation-${pos}">•</div>`;
         }
 
         const symbolHtml = `<div class="cube-symbol">${symbol !== "N" ? symbol : ""}</div>`;
-
         c.innerHTML = pointHtml + symbolHtml;
     });
 }
 
-
 function isEdge(r, c) {
     return r === 0 || r === 4 || c === 0 || c === 4;
-}
-
-function canTakeCube(player, r, c) {
-    const cube = board[r][c];
-
-    if (cube.symbol !== "N" && cube.symbol !== playerSymbol(player)) return false;
-
-    if (MODE === 1) return true;
-
-    if (cube.symbol === "N") return true;
-
-    return cube.point === playerOrderToPoint(player.order);
 }
 
 function playerSymbol(player) {
@@ -71,6 +54,16 @@ function playerOrderToPoint(order) {
     if (order === 3) return "Bottom";
     if (order === 4) return "Left";
     return null;
+}
+
+function canTakeCube(player, r, c) {
+    const cube = board[r][c];
+
+    if (cube.symbol !== "N" && cube.symbol !== playerSymbol(player)) return false;
+    if (MODE === 1) return true;
+    if (cube.symbol === "N") return true;
+
+    return cube.point === playerOrderToPoint(player.order);
 }
 
 function nextTurn() {
@@ -95,7 +88,6 @@ function handleClick(div) {
 
     if (!selected) {
         if (!canTakeCube(currentPlayer, r, c)) return;
-
         selected = { r, c };
         div.style.background = "#ccc";
         return;
@@ -114,21 +106,35 @@ function handleClick(div) {
 
     selected = null;
     document.querySelectorAll(".cube").forEach(x => x.style.background = "#eee");
-
     renderBoard();
 
-    if (checkWinner(currentPlayer)) {
-        endGame(currentPlayer);
-        return;
-    }
-
-    if (MODE === 2) {
-        if (checkOpponentLine(currentPlayer)) {
-            endGameOpponentLine();
+    if (MODE === 1) {
+        if (checkWinner(currentPlayer)) {
+            endGame(currentPlayer);
             return;
         }
     }
 
+    if (MODE === 2) {
+        if (checkWinnerByTeam(currentPlayer.team)) {
+            endGameTeam(currentPlayer.team);
+            return;
+        }
+
+        if (checkOpponentLine(currentPlayer)) {
+            endGameOpponentLine();
+            return;
+        }
+
+        const teamAWin = checkWinnerByTeam("A");
+        const teamBWin = checkWinnerByTeam("B");
+
+        if (teamAWin || teamBWin) {
+            endGameTeam(teamAWin ? "A" : "B");
+            return;
+        }
+    }
+    console.log("Game mode:", MODE);
     nextTurn();
 }
 
@@ -141,11 +147,8 @@ function getPushDirection(fr, fc, tr, tc) {
 }
 
 function pushCube(sel, dir) {
-    let removed = board[sel.r][sel.c];
-    removed = { symbol: "N", point: null };
-
     const sym = playerSymbol(currentPlayer);
-    const pt = MODE === 2 ? decidePointOrientation(currentPlayer) : null;
+    const pt = MODE === 2 ? playerOrderToPoint(currentPlayer.order) : null;
 
     if (dir === "down") {
         for (let i = sel.r; i < 4; i++) board[i][sel.c] = board[i + 1][sel.c];
@@ -179,16 +182,11 @@ function pushCube(sel, dir) {
     });
 }
 
-function decidePointOrientation(player) {
-    return playerOrderToPoint(player.order);
-}
-
 function checkWinner(player) {
     const sym = playerSymbol(player);
 
-    for (let r = 0; r < 5; r++) {
+    for (let r = 0; r < 5; r++)
         if (board[r].every(c => c.symbol === sym)) return true;
-    }
 
     for (let c = 0; c < 5; c++) {
         let ok = true;
@@ -196,19 +194,41 @@ function checkWinner(player) {
         if (ok) return true;
     }
 
-    let ok1 = true, ok2 = true;
-    for (let i = 0; i < 5; i++) if (board[i][i].symbol !== sym) ok1 = false;
-    for (let i = 0; i < 5; i++) if (board[i][4 - i].symbol !== sym) ok2 = false;
+    let d1 = true, d2 = true;
+    for (let i = 0; i < 5; i++) {
+        if (board[i][i].symbol !== sym) d1 = false;
+        if (board[i][4 - i].symbol !== sym) d2 = false;
+    }
 
-    return ok1 || ok2;
+    return d1 || d2;
+}
+
+function checkWinnerByTeam(team) {
+    const sym = team === "A" ? "O" : "X";
+
+    for (let r = 0; r < 5; r++)
+        if (board[r].every(c => c.symbol === sym)) return true;
+
+    for (let c = 0; c < 5; c++) {
+        let ok = true;
+        for (let r = 0; r < 5; r++) if (board[r][c].symbol !== sym) ok = false;
+        if (ok) return true;
+    }
+
+    let d1 = true, d2 = true;
+    for (let i = 0; i < 5; i++) {
+        if (board[i][i].symbol !== sym) d1 = false;
+        if (board[i][4 - i].symbol !== sym) d2 = false;
+    }
+
+    return d1 || d2;
 }
 
 function checkOpponentLine(player) {
     const opponentSymbol = playerSymbol(player) === "O" ? "X" : "O";
 
     for (let r = 0; r < 5; r++)
-        if (board[r].every(c => c.symbol === opponentSymbol))
-            return true;
+        if (board[r].every(c => c.symbol === opponentSymbol)) return true;
 
     for (let c = 0; c < 5; c++) {
         let ok = true;
@@ -216,39 +236,36 @@ function checkOpponentLine(player) {
         if (ok) return true;
     }
 
-    let ok1 = true, ok2 = true;
-    for (let i = 0; i < 5; i++) if (board[i][i].symbol !== opponentSymbol) ok1 = false;
-    for (let i = 0; i < 5; i++) if (board[i][4 - i].symbol !== opponentSymbol) ok2 = false;
+    let d1 = true, d2 = true;
+    for (let i = 0; i < 5; i++) {
+        if (board[i][i].symbol !== opponentSymbol) d1 = false;
+        if (board[i][4 - i].symbol !== opponentSymbol) d2 = false;
+    }
 
-    return ok1 || ok2;
+    return d1 || d2;
 }
 
 function endGame(player) {
     clearInterval(timerInterval);
-    saveGame({
-        winnerPlayerId: player.id,
-        winnerTeam: null
-    });
+    saveGame({ winnerPlayerId: player.id, winnerTeam: player.team });
+}
+
+function endGameTeam(team) {
+    clearInterval(timerInterval);
+    saveGame({ winnerPlayerId: null, winnerTeam: team });
 }
 
 function endGameOpponentLine() {
     clearInterval(timerInterval);
     const winningTeam = currentPlayer.team === "A" ? "B" : "A";
-    saveGame({
-        winnerPlayerId: null,
-        winnerTeam: winningTeam
-    });
+    saveGame({ winnerPlayerId: null, winnerTeam: winningTeam });
 }
 
 function saveGame(result) {
-    const duration = Math.floor((Date.now() - startTime) / 1000);
-
-    const finalState = JSON.stringify(board);
-
     const payload = {
         GameId: GAME_ID,
-        DurationSeconds: duration,
-        FinalState: finalState,
+        DurationSeconds: Math.floor((Date.now() - startTime) / 1000),
+        FinalState: JSON.stringify(board),
         WinnerPlayerId: result.winnerPlayerId,
         WinnerTeam: result.winnerTeam,
         Moves: moves
@@ -264,15 +281,11 @@ function saveGame(result) {
 function startTimer() {
     timerInterval = setInterval(() => {
         const s = Math.floor((Date.now() - startTime) / 1000);
-        const h = String(Math.floor(s / 3600)).padStart(2, "0");
-        const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
-        const sec = String(s % 60).padStart(2, "0");
-        document.getElementById("gameTimer").textContent = `${h}:${m}:${sec}`;
+        document.getElementById("gameTimer").textContent =
+            `${String(Math.floor(s / 3600)).padStart(2, "0")}:` +
+            `${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}:` +
+            `${String(s % 60).padStart(2, "0")}`;
     }, 1000);
-}
-
-function resetGame() {
-    location.reload();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -280,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     GAME_ID = window.GAME_ID;
     PLAYERS = window.PLAYERS || [];
 
-    document.getElementById("resetGame").addEventListener("click", resetGame);
+    document.getElementById("resetGame").addEventListener("click", () => location.reload());
 
     initBoard();
     renderBoard();
@@ -292,8 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function updateTurnLabel() {
-    const player = PLAYERS[currentTurnIndex];
-    const label = document.getElementById("turnLabel");
-
-    label.textContent = `Turno actual: ${player.name} (${player.team})`;
+    const p = PLAYERS[currentTurnIndex];
+    document.getElementById("turnLabel").textContent =
+        `Turno actual: ${p.name} (${p.team})`;
 }
