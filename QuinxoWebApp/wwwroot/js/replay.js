@@ -5,7 +5,7 @@ function initReplayBoard() {
     for (let r = 0; r < 5; r++) {
         let row = [];
         for (let c = 0; c < 5; c++) {
-            row.push({ symbol: "N" });
+            row.push({ symbol: "N", point: null });
         }
         replayBoard.push(row);
     }
@@ -16,35 +16,45 @@ function renderReplayBoard() {
         const r = parseInt(el.dataset.row);
         const c = parseInt(el.dataset.col);
         const cell = replayBoard[r][c];
-        el.textContent = cell.symbol;
+
+        let pointHtml = "";
+        if (cell.point) {
+            const pos = cell.point.toLowerCase();
+            pointHtml = `<div class="orientation orientation-${pos}">•</div>`;
+        }
+
+        const symbolHtml =
+            `<div class="cube-symbol">${cell.symbol !== "N" ? cell.symbol : ""}</div>`;
+
+        el.innerHTML = pointHtml + symbolHtml;
     });
 }
 
 function applyMove(move) {
     const fr = move.from[0];
     const fc = move.from[1];
-    replayBoard[fr][fc] = { symbol: "N" };
 
     const dir = determineDirection(move.from, move.to);
+    const pt = move.pointOrientation || null;
 
     if (dir === "down") {
         for (let i = fr; i < 4; i++) replayBoard[i][fc] = replayBoard[i + 1][fc];
-        replayBoard[4][fc] = { symbol: move.symbol };
+        replayBoard[4][fc] = { symbol: move.symbol, point: pt };
     }
 
     if (dir === "up") {
         for (let i = fr; i > 0; i--) replayBoard[i][fc] = replayBoard[i - 1][fc];
-        replayBoard[0][fc] = { symbol: move.symbol };
+        replayBoard[0][fc] = { symbol: move.symbol, point: pt };
     }
 
     if (dir === "right") {
         for (let i = fc; i < 4; i++) replayBoard[fr][i] = replayBoard[fr][i + 1];
-        replayBoard[fr][4] = { symbol: move.symbol };
+        replayBoard[fr][4] = { symbol: move.symbol, point: pt };
     }
 
     if (dir === "left") {
         for (let i = fc; i > 0; i--) replayBoard[fr][i] = replayBoard[fr][i - 1];
-        replayBoard[fr][0] = { symbol: move.symbol };
+        replayBoard[fr][0] = { symbol: move.symbol, point: pt };
     }
 }
 
